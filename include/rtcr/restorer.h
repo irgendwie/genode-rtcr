@@ -163,7 +163,6 @@ private:
 
 	void _create_managed_dataspace_list(Genode::List<Pd_session_component> &ram_sessions);
 
-	void _restore_cap_map();
 	void _restore_cap_space();
 
 	void _restore_dataspaces();

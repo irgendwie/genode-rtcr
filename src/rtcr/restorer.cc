@@ -1251,9 +1251,6 @@ void Restorer::restore()
 		}
 	}
 
-	// Replace old badges with new in capability map
-	_restore_cap_map();
-
 	// Insert capabilities of all objects into capability space
 	_restore_cap_space();
 
