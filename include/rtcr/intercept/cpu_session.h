@@ -118,11 +118,6 @@ public:
 	int ref_account(Genode::Cpu_session_capability c) override;
 	int transfer_quota(Genode::Cpu_session_capability c, Genode::size_t q) override;
 	Genode::Capability<Native_cpu> native_cpu() override;
-
-	void deploy_queue(Genode::Dataspace_capability ds) override;
-	void rq(Genode::Dataspace_capability ds) override;
-	void dead(Genode::Dataspace_capability ds) override;
-	void killed() override;
 };
 
 

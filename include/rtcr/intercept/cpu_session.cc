@@ -211,31 +211,6 @@ Genode::Capability<Genode::Cpu_session::Native_cpu> Cpu_session_component::nativ
 	return result;
 }
 
-void Cpu_session_component::deploy_queue(Genode::Dataspace_capability ds)
-{
-	// TODO verbose_debug
-	_parent_cpu.deploy_queue(ds);
-}
-
-void Cpu_session_component::rq(Genode::Dataspace_capability ds)
-{
-	// TODO verbose_debug
-	_parent_cpu.rq(ds);
-}
-
-void Cpu_session_component::dead(Genode::Dataspace_capability ds)
-{
-	// TODO verbose_debug
-	_parent_cpu.dead(ds);
-}
-
-void Cpu_session_component::killed()
-{
-	// TODO verbose_debug
-	_parent_cpu.killed();
-}
-
-
 Cpu_session_component *Cpu_root::_create_session(const char *args)
 {
 	if(verbose_debug) Genode::log("Cpu_root::\033[33m", __func__, "\033[0m(", args,")");
