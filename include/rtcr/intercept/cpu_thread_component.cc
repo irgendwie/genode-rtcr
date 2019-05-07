@@ -86,16 +86,12 @@ Genode::Thread_state Cpu_thread_component::state()
 {
 	if(verbose_debug) Genode::log("Thread<\033[35m", _parent_state.name, "\033[0m>::\033[33m", __func__, "\033[0m()");
 	auto result = _parent_cpu_thread.state();
-	if(verbose_debug) Genode::log("  result: state<kcap=",
-			Genode::Hex(result.kcap), ", id=", result.id, ">");
 
 	return result;
 }
 
 void Cpu_thread_component::state(const Genode::Thread_state& state)
 {
-	if(verbose_debug) Genode::log("Thread<\033[35m", _parent_state.name, "\033[0m>::\033[33m", __func__, "\033[0m(state<kcap=",
-			Genode::Hex(state.kcap), ", id=", state.id, ">)");
 	_parent_cpu_thread.state(state);
 }
 
