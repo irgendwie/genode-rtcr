@@ -49,10 +49,6 @@ private:
 	 */
 	Target_state      &_state;
 	/**
-	 * Capability map of Target_child in a condensed form
-	 */
-	Genode::List<Kcap_badge_info>      _kcap_mappings { };
-	/**
 	 * Mapping to find a copy dataspace for a given original dataspace badge
 	 */
 	Genode::List<Dataspace_translation_info> _dataspace_translations { };
@@ -81,7 +77,6 @@ private:
 	 * from state_infos. Now an updated capability map is ready to used for the next steps to store the
 	 * kcap for each RPC object.
 	 */
-	Genode::List<Kcap_badge_info> _create_kcap_mappings();
 	Genode::List<Ref_badge_info> _mark_and_attach_designated_dataspaces(Attached_region_info &ar_info);
 	void _detach_and_unmark_designated_dataspaces(Genode::List<Ref_badge_info> &badge_infos, Attached_region_info &ar_info);
 	/**

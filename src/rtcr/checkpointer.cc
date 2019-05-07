@@ -40,111 +40,6 @@ void Checkpointer::_destroy_list(Genode::List<Simplified_managed_dataspace_info>
 }
 
 
-Genode::List<Kcap_badge_info> Checkpointer::_create_kcap_mappings()
-{
-	using Genode::log;
-	using Genode::Hex;
-	using Genode::addr_t;
-	using Genode::size_t;
-	using Genode::uint16_t;
-	const bool verbose_kcap_mappings_debug = false;
-
-	if(verbose_debug) Genode::log("Ckpt::\033[33m", __func__, "\033[0m()");
-
-	Genode::List<Kcap_badge_info> result;
-
-	// Retrieve cap_idx_alloc_addr
-	Genode::Pd_session_client pd_client(_child.pd().parent_cap());
-	addr_t const cap_idx_alloc_addr = 0xc0198;//Genode::Foc_native_pd_client(pd_client.native_pd()).cap_map_info();
-	_state._cap_idx_alloc_addr = cap_idx_alloc_addr;
-
-	if(verbose_kcap_mappings_debug) Genode::log("Address of cap_idx_alloc = ", Hex(cap_idx_alloc_addr));
-
-	// Find child's dataspace containing the capability map
-	// It is found via cap_idx_alloc_addr
-	Attached_region_info *ar_info = _child.pd().address_space_component().parent_state().attached_regions.first();
-	if(ar_info) ar_info = ar_info->find_by_addr(cap_idx_alloc_addr);
-	if(!ar_info)
-	{
-		Genode::error("No dataspace found for cap_idx_alloc's datastructure at ", Hex(cap_idx_alloc_addr));
-		throw Genode::Exception();
-	}
-
-	// If ar_info is a managed Ram_dataspace_info, mark detached Designated_dataspace_infos and attach them,
-	// thus, the Checkpointer does not trigger page faults which mark accessed regions
-	Genode::List<Ref_badge_info> marked_badge_infos =
-			_mark_and_attach_designated_dataspaces(*ar_info);
-
-	// Create new badge_kcap list
-	size_t const struct_size    = sizeof(Genode::Cap_index_allocator_tpl<Genode::Cap_index,4096>);
-	size_t const array_ele_size = sizeof(Genode::Cap_index);
-	size_t const array_size     = array_ele_size*4096;
-
-	addr_t const child_ds_start     = ar_info->rel_addr;
-	addr_t const child_ds_end       = child_ds_start + ar_info->size;
-	addr_t const child_struct_start = cap_idx_alloc_addr;
-	addr_t const child_struct_end   = child_struct_start + struct_size;
-	addr_t const child_array_start  = child_struct_start + 8;
-	addr_t const child_array_end    = child_array_start + array_size;
-
-	addr_t const local_ds_start     = _state._env.rm().attach(ar_info->attached_ds_cap, ar_info->size, ar_info->offset);
-	addr_t const local_ds_end       = local_ds_start + ar_info->size;
-	addr_t const local_struct_start = local_ds_start + (cap_idx_alloc_addr - child_ds_start);
-	addr_t const local_struct_end   = local_struct_start + struct_size;
-	addr_t const local_array_start  = local_struct_start + 8;
-	addr_t const local_array_end    = local_array_start + array_size;
-
-	if(verbose_kcap_mappings_debug)
-	{
-		log("child_ds_start:     ", Hex(child_ds_start));
-		log("child_struct_start: ", Hex(child_struct_start));
-		log("child_array_start:  ", Hex(child_array_start));
-		log("child_array_end:    ", Hex(child_array_end));
-		log("child_struct_end:   ", Hex(child_struct_end));
-		log("child_ds_end:       ", Hex(child_ds_end));
-
-		log("local_ds_start:     ", Hex(local_ds_start));
-		log("local_struct_start: ", Hex(local_struct_start));
-		log("local_array_start:  ", Hex(local_array_start));
-		log("local_array_end:    ", Hex(local_array_end));
-		log("local_struct_end:   ", Hex(local_struct_end));
-		log("local_ds_end:       ", Hex(local_ds_end));
-	}
-
-	//dump_mem((void*)local_array_start, 0x1200);
-
-	enum { UNUSED = 0, INVALID_ID = 0xffff };
-	for(addr_t curr = local_array_start; curr < local_array_end; curr += array_ele_size)
-	{
-
-		size_t const badge_offset = 6;
-
-		// Convert address to pointer and dereference it
-		uint16_t const badge = *(uint16_t*)(curr + badge_offset);
-		// Current capability map slot = Compute distance from start to current address of array and
-		// divide it by the element size;
-		// kcap = current capability map slot shifted by 12 bits to the left (last 12 bits are used
-		// by Fiasco.OC for parameters for IPC calls)
-		addr_t const kcap  = ((curr - local_array_start) / array_ele_size) << 12;
-
-		if(badge != UNUSED && badge != INVALID_ID)
-		{
-			Kcap_badge_info *state_info = new (_alloc) Kcap_badge_info(kcap, badge);
-			result.insert(state_info);
-
-			if(verbose_kcap_mappings_debug) log("+ ", Hex(kcap), ": ", badge, " (", Hex(badge), ")");
-		}
-	}
-
-	_state._env.rm().detach(local_ds_start);
-
-	// Detach the previously attached Designated_dataspace_infos and delete the list containing marked Designated_dataspace_infos
-	_detach_and_unmark_designated_dataspaces(marked_badge_infos, *ar_info);
-
-	return result;
-}
-
-
 Genode::List<Ref_badge_info> Checkpointer::_mark_and_attach_designated_dataspaces(Attached_region_info &ar_info)
 {
 	if(verbose_debug) Genode::log("Ckpt::\033[33m", __func__, "\033[0m(...)");
@@ -201,11 +96,11 @@ Genode::addr_t Checkpointer::_find_kcap_by_badge(Genode::uint16_t badge)
 {
 	if(verbose_debug) Genode::log("Ckpt::\033[33m", __func__, "\033[0m(...)");
 
-	Genode::addr_t kcap = 0;
+	Genode::addr_t kcap = badge;
 
-	Kcap_badge_info *info = _kcap_mappings.first();
+	/*Kcap_badge_info *info = _kcap_mappings.first();
 	if(info) info = info->find_by_badge(badge);
-	if(info) kcap = info->kcap;
+	if(info) kcap = info->kcap;*/
 
 	return kcap;
 }
@@ -1435,7 +1330,6 @@ Checkpointer::~Checkpointer()
 {
 	if(verbose_debug) Genode::log("\033[33m", "~Checkpointer", "\033[0m");
 
-	_destroy_list(_kcap_mappings);
 	_destroy_list(_dataspace_translations);
 	_destroy_list(_region_maps);
 	_destroy_list(_managed_dataspaces);
@@ -1449,21 +1343,6 @@ void Checkpointer::checkpoint()
 
 	// Pause child
 	_child.pause();
-
-	// Create mapping of badge to kcap
-	_kcap_mappings = _create_kcap_mappings();
-
-	if(verbose_debug)
-	{
-		Genode::log("Capability map:");
-		Kcap_badge_info const *info = _kcap_mappings.first();
-		if(!info) Genode::log(" <empty>\n");
-		while(info)
-		{
-			Genode::log(" ", *info);
-			info = info->next();
-		}
-	}
 
 	// Create a list of region map dataspaces which are known to child
 	// These dataspaces are ignored when creating copy dataspaces
@@ -1543,7 +1422,6 @@ void Checkpointer::checkpoint()
 	if(verbose_debug) Genode::log(_state);
 
 	// Clean up
-	_destroy_list(_kcap_mappings);
 	_destroy_list(_dataspace_translations);
 	_destroy_list(_region_maps);
 	_destroy_list(_managed_dataspaces);

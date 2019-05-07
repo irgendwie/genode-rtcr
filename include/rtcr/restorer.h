@@ -41,15 +41,6 @@ private:
 	Target_child      &_child;
 	Target_state      &_state;
 	/**
-	 * \brief Contains kcap addresses and badges/capabilities which shall be mapped to the kcap addresses
-	 *
-	 * Contains kcap addresses and badges/capabilities which shall be mapped to these addresses
-	 * Usage
-	 * * Restoration of the capability map: Store the badge to the corresponding kcap address
-	 * * Restoration of the cap space: Map the capability to the corresponding kcap address
-	 */
-	Genode::List<Kcap_cap_info> _kcap_mappings { };
-	/**
 	 * \brief Contains mappings of stored RPC objects to newly recreated RPC objects via badge association
 	 *
 	 * Each stored RPC object has an associated restored RPC object. This list contains a mapping of a badge
