@@ -10,14 +10,14 @@ using namespace Rtcr;
 
 
 Timer_session_component::Timer_session_component(Genode::Env &env, Genode::Allocator &md_alloc, Genode::Entrypoint &ep,
-		const char *creation_args, bool bootstrapped, Resources resources, Diag diag)
+		const char *creation_args, bool bootstrapped)
 :
-	Session_object(ep, resources, "", diag),
 	_md_alloc     (md_alloc),
 	_ep           (ep),
 	_parent_timer (env),
 	_parent_state (creation_args, bootstrapped)
 {
+	_ep.rpc_ep().manage(this);
 	//if(verbose_debug) Genode::log("\033[33m", "Timer", "\033[0m(parent ", _parent_timer, ")");
 }
 
@@ -126,10 +126,9 @@ Timer_session_component *Timer_root::_create_session(const char *args)
 	Genode::snprintf(ram_quota_buf, sizeof(ram_quota_buf), "%zu", readjusted_ram_quota);
 	Genode::Arg_string::set_arg(readjusted_args, sizeof(readjusted_args), "ram_quota", ram_quota_buf);
 
-	Genode::Session::Diag diag{};
 	// Create virtual session object
 	Timer_session_component *new_session =
-			new (md_alloc()) Timer_session_component(_env, _md_alloc, _ep, readjusted_args, _bootstrap_phase, Genode::session_resources_from_args(readjusted_args), diag);
+			new (md_alloc()) Timer_session_component(_env, _md_alloc, _ep, readjusted_args, _bootstrap_phase);
 
 	Genode::Lock::Guard guard(_objs_lock);
 	_session_rpc_objs.insert(new_session);

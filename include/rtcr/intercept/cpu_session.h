@@ -30,7 +30,7 @@ namespace Rtcr {
 /**
  * This custom Cpu session intercepts the creation and destruction of threads by the client
  */
-class Rtcr::Cpu_session_component : public Genode::Session_object<Genode::Cpu_session>,
+class Rtcr::Cpu_session_component : public Genode::Rpc_object<Genode::Cpu_session>,
                                     private Genode::List<Cpu_session_component>::Element
 {
 private:
@@ -71,9 +71,6 @@ private:
 	 */
 	Cpu_session_info       _parent_state;
 
-	Resources _resources;
-	Diag _diag;
-
 	Cpu_thread_component &_create_thread(Genode::Pd_session_capability child_pd_cap, Genode::Pd_session_capability parent_pd_cap,
 			Name const &name, Genode::Affinity::Location affinity, Weight weight, Genode::addr_t utcb);
 	void _kill_thread(Cpu_thread_component &cpu_thread);
@@ -86,7 +83,7 @@ private:
 
 public:
 	Cpu_session_component(Genode::Env &env, Genode::Allocator &md_alloc, Genode::Entrypoint &ep,
-			Pd_root &pd_root, const char *label, const char *creation_args, bool &bootstrap_phase, Resources resources, Diag diag);
+			Pd_root &pd_root, const char *label, const char *creation_args, bool &bootstrap_phase);
 	~Cpu_session_component();
 
 	Genode::Cpu_session_capability parent_cap() { return _parent_cpu.cap(); }

@@ -31,7 +31,7 @@ namespace Rtcr {
 /**
  * Custom RPC session object to intercept its creation, modification, and destruction through its interface
  */
-class Rtcr::Log_session_component : public Genode::Session_object<Genode::Log_session>,
+class Rtcr::Log_session_component : public Genode::Rpc_object<Genode::Log_session>,
                                     private Genode::List<Log_session_component>::Element
 {
 private:
@@ -60,7 +60,7 @@ private:
 
 public:
 	Log_session_component(Genode::Env &env, Genode::Allocator &md_alloc, Genode::Entrypoint &ep,
-			const char *label, const char *creation_args, bool bootstrapped, Resources resources, Diag diag);
+			const char *label, const char *creation_args, bool bootstrapped);
 	~Log_session_component();
 
 	Genode::Log_session_capability parent_cap() { return _parent_log.cap(); }
