@@ -7,8 +7,6 @@
 #include "rtcr/restorer.h"
 #include "rtcr/util/sort.h"
 #include "rtcr/util/debug.h"
-#include <base/internal/cap_map.h>
-#include <base/internal/cap_alloc.h>
 
 using namespace Rtcr;
 

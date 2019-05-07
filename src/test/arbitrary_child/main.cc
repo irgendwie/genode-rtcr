@@ -8,7 +8,6 @@
 #include <base/component.h>
 #include <timer_session/connection.h>
 #include <rm_session/connection.h>
-#include <base/internal/cap_map.h>
 #include <dataspace/client.h>
 
 void test_entrypoint_creation(Genode::Env &env)

@@ -6,8 +6,6 @@
 
 #include "rtcr/checkpointer.h"
 //#include "util/debug.h"
-#include <base/internal/cap_map.h>
-#include <base/internal/cap_alloc.h>
 
 using namespace Rtcr;
 
