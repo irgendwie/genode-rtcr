@@ -16,10 +16,6 @@
 #include <rm_session/connection.h>
 #include <region_map/client.h>
 
-namespace Fiasco {
-#include <l4/sys/kdebug.h>
-}
-
 Genode::size_t Component::stack_size() { return 16*1024; }
 
 void Component::construct(Genode::Env &env)

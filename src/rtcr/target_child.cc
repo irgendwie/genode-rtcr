@@ -7,10 +7,6 @@
 #include "rtcr/target_child.h"
 #include "rtcr/restorer.h"
 
-namespace Fiasco {
-#include <l4/sys/kdebug.h>
-}
-
 using namespace Rtcr;
 
 Target_child::Custom_services::Custom_services(Genode::Env &env, Genode::Allocator &md_alloc, Genode::Entrypoint &ep,
