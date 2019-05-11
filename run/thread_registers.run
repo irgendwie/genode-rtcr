@@ -14,10 +14,14 @@ install_config {
 <config>
 	<parent-provides>
 		<service name="LOG"/>
+		<service name="PD"/>
+		<service name="CPU"/>
+		<service name="ROM"/>
 	</parent-provides>
 	<default-route>
 		<any-service> <parent/> <any-child/> </any-service>
 	</default-route>
+	<default caps="100"/>
 	<start name="thread_registers">
 		<resource name="RAM" quantum="1M"/>
 	</start>
@@ -27,7 +31,7 @@ install_config {
 # Boot image
 #
 
-build_boot_image { core init thread_registers }
+build_boot_image { core init thread_registers ld.lib.so }
 
 append qemu_args " -nographic "
 
