@@ -79,12 +79,6 @@ private:
 	 */
 	Genode::List<Ref_badge_info> _mark_and_attach_designated_dataspaces(Attached_region_info &ar_info);
 	void _detach_and_unmark_designated_dataspaces(Genode::List<Ref_badge_info> &badge_infos, Attached_region_info &ar_info);
-	/**
-	 * \brief Return the kcap for a given badge from _capability_map_infos
-	 *
-	 * Return the kcap for a given badge. If there is no, return 0.
-	 */
-	Genode::addr_t _find_kcap_by_badge(Genode::uint16_t badge);
 
 	/**
 	 * Searches for a dataspace which stores the content of a child's dataspace in ALL possible session RPC objects

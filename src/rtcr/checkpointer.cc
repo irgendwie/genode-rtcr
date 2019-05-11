@@ -91,21 +91,6 @@ void Checkpointer::_detach_and_unmark_designated_dataspaces(Genode::List<Ref_bad
 	_destroy_list(badge_infos);
 }
 
-
-Genode::addr_t Checkpointer::_find_kcap_by_badge(Genode::uint16_t badge)
-{
-	if(verbose_debug) Genode::log("Ckpt::\033[33m", __func__, "\033[0m(...)");
-
-	Genode::addr_t kcap = badge;
-
-	/*Kcap_badge_info *info = _kcap_mappings.first();
-	if(info) info = info->find_by_badge(badge);
-	if(info) kcap = info->kcap;*/
-
-	return kcap;
-}
-
-
 Genode::Dataspace_capability Checkpointer::_find_stored_dataspace(Genode::uint16_t badge)
 {
 	Genode::Dataspace_capability result;
