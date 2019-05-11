@@ -619,14 +619,14 @@ Genode::Child_policy::Route Target_child::resolve_session_request(Genode::Servic
 	Genode::log("Resolve session request ",name," ",label);
 
 	/* use empty rom service, to give empty dataspace capabilities only */
-	Genode::Entrypoint *_ep = new (_md_alloc) Genode::Entrypoint(_env, 16 * 1024, "custom ep");
+	/*Genode::Entrypoint *_ep = new (_md_alloc) Genode::Entrypoint(_env, 16 * 1024, "custom ep");
 	Rtcr::Empty_ROM_session_factory ersf { _md_alloc, _ep->rpc_ep(), _env };
 	Genode::Local_service<Rtcr::Empty_ROM_session_component> ersls { ersf };
 
 	if (_restorer && !Genode::strcmp(name.string(), "ROM")) {
 		Genode::log("using empty rom service");
 		return Route { ersls, label, Genode::Session::Diag{false} };
-	}
+	}*/
 
 	/* use ld.lib.so ROM from parent services */
 	if(!Genode::strcmp(label.string(), "ld.lib.so"))
