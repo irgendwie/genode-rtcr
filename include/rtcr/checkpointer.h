@@ -10,12 +10,10 @@
 /* Genode includes */
 #include <util/list.h>
 #include <region_map/client.h>
-//#include <foc_native_pd/client.h> does not exist anymore
 
 /* Rtcr includes */
 #include "target_state.h"
 #include "target_child.h"
-#include "util/kcap_badge_info.h"
 #include "util/dataspace_translation_info.h"
 #include "util/ref_badge_info.h"
 #include "util/simplified_managed_dataspace_info.h"

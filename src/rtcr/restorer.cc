@@ -19,7 +19,6 @@ void Restorer::_destroy_list(Genode::List<T> &list)
 		Genode::destroy(_alloc, elem);
 	}
 }
-template void Restorer::_destroy_list(Genode::List<Kcap_cap_info> &list);
 template void Restorer::_destroy_list(Genode::List<Badge_translation_info> &list);
 template void Restorer::_destroy_list(Genode::List<Dataspace_translation_info> &list);
 template void Restorer::_destroy_list(Genode::List<Ref_badge_info> &list);
@@ -266,8 +265,6 @@ void Restorer::_recreate_signal_contexts(Pd_session_component &pd_session,
 				throw Genode::Exception();
 			}
 		}
-		// Store kcap for the badge of the newly created RPC object
-		_kcap_mappings.insert(new (_alloc) Kcap_cap_info(stored_ram_session->kcap, ram_session->cap(), "RAM session"));
 
 		// Remember the association of the stored RPC object to the new RPC object
 		_rpcobject_translations.insert(new (_alloc) Badge_translation_info(stored_ram_session->badge, ram_session->cap()));
@@ -1065,8 +1062,6 @@ void Restorer::_restore_dataspace_content(Genode::Dataspace_capability dst_ds_ca
 	_state._env.rm().detach(dst_start_addr);
 }
 
-#include "rtcr/util/debug.h"
-
 void Restorer::_start_threads(Cpu_root &cpu_root, Genode::List<Stored_cpu_session_info> &stored_cpu_sessions)
 {
 	if(verbose_debug) Genode::log("Resto::\033[33m", __func__, "\033[0m(...)");
@@ -1154,7 +1149,7 @@ void Restorer::restore()
 	 ***********************************/
 
 	// Identify or recreate RPC objects (caution: PD <- CPU thread <- Native cap ( "<-" means requires))
-	// During the iterations _kcap_mappings and _rpcobject_translations are filled for the next steps
+	// During the iterations _rpcobject_translations are filled for the next steps
 	//_identify_recreate_ram_sessions(*_child.custom_services().ram_root, _state._stored_ram_sessions);
 	_identify_recreate_pd_sessions(*_child.custom_services().pd_root, _state._stored_pd_sessions);
 	_identify_recreate_cpu_sessions(*_child.custom_services().cpu_root, _state._stored_cpu_sessions,

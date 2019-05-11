@@ -13,7 +13,6 @@
 /* Rtcr includes */
 #include "target_state.h"
 #include "target_child.h"
-#include "util/kcap_cap_info.h"
 #include "util/badge_translation_info.h"
 #include "util/dataspace_translation_info.h"
 #include "util/ref_badge_info.h"

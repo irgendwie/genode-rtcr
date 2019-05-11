@@ -5,7 +5,6 @@
  */
 
 #include "rtcr/checkpointer.h"
-//#include "util/debug.h"
 
 using namespace Rtcr;
 
@@ -18,7 +17,6 @@ void Checkpointer::_destroy_list(Genode::List<T> &list)
 		Genode::destroy(_alloc, elem);
 	}
 }
-template void Checkpointer::_destroy_list(Genode::List<Kcap_badge_info> &list);
 template void Checkpointer::_destroy_list(Genode::List<Dataspace_translation_info> &list);
 template void Checkpointer::_destroy_list(Genode::List<Ref_badge_info> &list);
 
@@ -455,8 +453,7 @@ void Checkpointer::_destroy_stored_attached_region(Stored_attached_region_info &
 		// No corresponding stored_info => create it
 		if(!stored_info)
 		{
-			Genode::addr_t childs_kcap = _find_kcap_by_badge(child_info->cap().local_name());
-			stored_info = new (_state._alloc) Stored_ram_session_info(*child_info, childs_kcap);
+			stored_info = new (_state._alloc) Stored_ram_session_info(*child_info,);
 			stored_infos.insert(stored_info);
 		}
 
