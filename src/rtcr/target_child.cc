@@ -6,6 +6,7 @@
 
 #include "rtcr/target_child.h"
 #include "rtcr/restorer.h"
+#include "rtcr/util/empty_rom_service.h"
 
 using namespace Rtcr;
 
@@ -313,6 +314,13 @@ void Target_child::start(Restorer &restorer)
 {
 	if(verbose_debug) Genode::log("Target_child::\033[33m", __func__, "\033[0m(from_restorer=", &restorer,")");
 
+	/**
+	 * since _restorer isn't used anymore,
+	 * use it to indicate that _restorer is running
+	 * (useful for empty rom server)
+	 */
+	_restorer = (Rtcr::Restorer *)0x1;
+
 	_child = new (_md_alloc) Genode::Child (
 			/*Genode::Dataspace_capability(),
 			Genode::Dataspace_capability(),
@@ -607,16 +615,27 @@ void Target_child::print(Genode::Output &output) const
 Genode::Child_policy::Route Target_child::resolve_session_request(Genode::Service::Name const &name,
 		                              Genode::Session_label const &label)
 {
-	
-	//Genode::log("Resolve session request ",name," ",label);
-	//return Route { find_service(_parent_services,name), label, Genode::Session::Diag{false}};
-	//Genode::log("local service ",name);
+	/* log requests */
+	Genode::log("Resolve session request ",name," ",label);
+
+	/* use empty rom service, to give empty dataspace capabilities only */
+	Genode::Entrypoint *_ep = new (_md_alloc) Genode::Entrypoint(_env, 16 * 1024, "custom ep");
+	Rtcr::Empty_ROM_session_factory ersf { _md_alloc, _ep->rpc_ep(), _env };
+	Genode::Local_service<Rtcr::Empty_ROM_session_component> ersls { ersf };
+
+	if (_restorer && !Genode::strcmp(name.string(), "ROM")) {
+		Genode::log("using empty rom service");
+		return Route { ersls, label, Genode::Session::Diag{false} };
+	}
+
+	/* use ld.lib.so ROM from parent services */
 	if(!Genode::strcmp(label.string(), "ld.lib.so"))
+	{
 		return Route { find_service(_parent_services, name), label, Genode::Session::Diag{false}};
+	}
+
+	/* serve requests from custom services */
 	return Route { *_custom_services.find(name.string()), label, Genode::Session::Diag{false} };
-	Genode::log("Could not find ",name);
-	Genode::Child_policy::Route *foo=0;
-	return *foo;
 }
 
 Rtcr::Pd_session_component &Local_pd_factory::create(Args const &, Genode::Affinity)
