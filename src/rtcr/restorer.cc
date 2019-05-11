@@ -856,8 +856,18 @@ void Restorer::_restore_state_attached_regions(Region_map_component &region_map,
 		//Genode::Dataspace_client ds_client(ds_cap);
 		//Genode::log(Hex(ds_client.size()), " ", Hex(ds_client.phys_addr()), " ", ds_client.writable());
 
+		try {
 		region_map.attach(ds_cap, stored_attached_region->size, 0,
 				true, stored_attached_region->rel_addr, stored_attached_region->executable);
+		} catch(Genode::Region_map::Region_conflict) {
+			/**
+			 * if address already in use, try with next region…
+			 * temporary workaround to get further in c/r process
+			 */
+			Genode::error("Address already in use");
+			stored_attached_region = stored_attached_region->next();
+			continue;
+		}
 
 		// Find the attached dataspace in the region map
 		attached_region = region_map.parent_state().attached_regions.first();
