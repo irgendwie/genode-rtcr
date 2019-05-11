@@ -228,8 +228,7 @@ void Checkpointer::_prepare_rm_sessions(Genode::List<Stored_rm_session_info> &st
 		// No corresponding stored_info => create it
 		if(!stored_info)
 		{
-			Genode::addr_t childs_kcap = _find_kcap_by_badge(child_info->cap().local_name());
-			stored_info = new (_state._alloc) Stored_rm_session_info(*child_info, childs_kcap);
+			stored_info = new (_state._alloc) Stored_rm_session_info(*child_info);
 			stored_infos.insert(stored_info);
 		}
 
@@ -290,8 +289,7 @@ void Checkpointer::_prepare_region_maps(Genode::List<Stored_region_map_info> &st
 		// No corresponding stored_info => create it
 		if(!stored_info)
 		{
-			Genode::addr_t childs_kcap = _find_kcap_by_badge(child_info->cap().local_name());
-			stored_info = new (_state._alloc) Stored_region_map_info(*child_info, childs_kcap);
+			stored_info = new (_state._alloc) Stored_region_map_info(*child_info);
 			stored_infos.insert(stored_info);
 		}
 
@@ -434,8 +432,7 @@ Stored_attached_region_info &Checkpointer::_create_stored_attached_region(Attach
 		}
 	}
 
-	Genode::addr_t childs_kcap = _find_kcap_by_badge(child_info.attached_ds_cap.local_name());
-	return *new (_state._alloc) Stored_attached_region_info(child_info, childs_kcap, ramds_cap);
+	return *new (_state._alloc) Stored_attached_region_info(child_info, ramds_cap);
 }
 void Checkpointer::_destroy_stored_attached_region(Stored_attached_region_info &stored_info)
 {
@@ -608,8 +605,7 @@ Stored_ram_dataspace_info &Checkpointer::_create_stored_ram_dataspace(Ram_datasp
 		}
 	}
 
-	Genode::addr_t childs_kcap = _find_kcap_by_badge(child_info.cap.local_name());
-	return *new (_state._alloc) Stored_ram_dataspace_info(child_info, childs_kcap, ramds_cap);
+	return *new (_state._alloc) Stored_ram_dataspace_info(child_info, ramds_cap);
 }
 void Checkpointer::_destroy_stored_ram_dataspace(Stored_ram_dataspace_info &stored_info)
 {
@@ -647,8 +643,7 @@ void Checkpointer::_prepare_cpu_sessions(Genode::List<Stored_cpu_session_info> &
 		// No corresponding stored_info => create it
 		if(!stored_info)
 		{
-			Genode::addr_t childs_kcap = _find_kcap_by_badge(child_info->cap().local_name());
-			stored_info = new (_state._alloc) Stored_cpu_session_info(*child_info, childs_kcap);
+			stored_info = new (_state._alloc) Stored_cpu_session_info(*child_info);
 			stored_infos.insert(stored_info);
 		}
 
@@ -712,8 +707,7 @@ void Checkpointer::_prepare_cpu_threads(Genode::List<Stored_cpu_thread_info> &st
 		// No corresponding stored_info => create it
 		if(!stored_info)
 		{
-			Genode::addr_t childs_kcap = _find_kcap_by_badge(child_info->cap().local_name());
-			stored_info = new (_state._alloc) Stored_cpu_thread_info(*child_info, childs_kcap);
+			stored_info = new (_state._alloc) Stored_cpu_thread_info(*child_info);
 			stored_infos.insert(stored_info);
 		}
 
@@ -777,12 +771,7 @@ void Checkpointer::_prepare_pd_sessions(Genode::List<Stored_pd_session_info> &st
 		// No corresponding stored_info => create it
 		if(!stored_info)
 		{
-			Genode::addr_t childs_pd_kcap  = _find_kcap_by_badge(child_info->cap().local_name());
-			Genode::addr_t childs_add_kcap = _find_kcap_by_badge(child_info->address_space_component().cap().local_name());
-			Genode::addr_t childs_sta_kcap = _find_kcap_by_badge(child_info->stack_area_component().cap().local_name());
-			Genode::addr_t childs_lin_kcap = _find_kcap_by_badge(child_info->linker_area_component().cap().local_name());
-			stored_info = new (_state._alloc) Stored_pd_session_info(*child_info,
-					childs_pd_kcap, childs_add_kcap, childs_sta_kcap, childs_lin_kcap);
+			stored_info = new (_state._alloc) Stored_pd_session_info(*child_info);
 			stored_infos.insert(stored_info);
 		}
 
@@ -872,8 +861,7 @@ void Checkpointer::_prepare_native_caps(Genode::List<Stored_native_capability_in
 		// No corresponding stored_info => create it
 		if(!stored_info)
 		{
-			Genode::addr_t childs_kcap = _find_kcap_by_badge(child_info->cap.local_name());
-			stored_info = new (_state._alloc) Stored_native_capability_info(*child_info, childs_kcap);
+			stored_info = new (_state._alloc) Stored_native_capability_info(*child_info);
 			stored_infos.insert(stored_info);
 		}
 
@@ -930,8 +918,7 @@ void Checkpointer::_prepare_signal_sources(Genode::List<Stored_signal_source_inf
 		// No corresponding stored_info => create it
 		if(!stored_info)
 		{
-			Genode::addr_t childs_kcap = _find_kcap_by_badge(child_info->cap.local_name());
-			stored_info = new (_state._alloc) Stored_signal_source_info(*child_info, childs_kcap);
+			stored_info = new (_state._alloc) Stored_signal_source_info(*child_info);
 			stored_infos.insert(stored_info);
 		}
 
@@ -988,8 +975,7 @@ void Checkpointer::_prepare_signal_contexts(Genode::List<Stored_signal_context_i
 		// No corresponding stored_info => create it
 		if(!stored_info)
 		{
-			Genode::addr_t childs_kcap = _find_kcap_by_badge(child_info->cap.local_name());
-			stored_info = new (_state._alloc) Stored_signal_context_info(*child_info, childs_kcap);
+			stored_info = new (_state._alloc) Stored_signal_context_info(*child_info);
 			stored_infos.insert(stored_info);
 		}
 
@@ -1046,8 +1032,7 @@ void Checkpointer::_prepare_log_sessions(Genode::List<Stored_log_session_info> &
 		// No corresponding stored_info => create it
 		if(!stored_info)
 		{
-			Genode::addr_t childs_kcap = _find_kcap_by_badge(child_info->cap().local_name());
-			stored_info = new (_state._alloc) Stored_log_session_info(*child_info, childs_kcap);
+			stored_info = new (_state._alloc) Stored_log_session_info(*child_info);
 			stored_infos.insert(stored_info);
 		}
 
@@ -1104,8 +1089,7 @@ void Checkpointer::_prepare_timer_sessions(Genode::List<Stored_timer_session_inf
 		// No corresponding stored_info => create it
 		if(!stored_info)
 		{
-			Genode::addr_t childs_kcap = _find_kcap_by_badge(child_info->cap().local_name());
-			stored_info = new (_state._alloc) Stored_timer_session_info(*child_info, childs_kcap);
+			stored_info = new (_state._alloc) Stored_timer_session_info(*child_info);
 			stored_infos.insert(stored_info);
 		}
 

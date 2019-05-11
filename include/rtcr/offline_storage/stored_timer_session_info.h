@@ -25,11 +25,10 @@ struct Rtcr::Stored_timer_session_info : Stored_session_info, Genode::List<Store
 	unsigned         timeout;
 	bool             periodic;
 
-	Stored_timer_session_info(Timer_session_component &timer_session, Genode::addr_t targets_kcap)
+	Stored_timer_session_info(Timer_session_component &timer_session)
 	:
 		Stored_session_info(timer_session.parent_state().creation_args.string(),
 				timer_session.parent_state().upgrade_args.string(),
-				targets_kcap,
 				timer_session.cap().local_name(),
 				timer_session.parent_state().bootstrapped),
 		sigh_badge (timer_session.parent_state().sigh.local_name()),
@@ -39,14 +38,13 @@ struct Rtcr::Stored_timer_session_info : Stored_session_info, Genode::List<Store
 
 	Stored_timer_session_info(const char* creation_args,
                                         const char* upgrade_args,
-                                        Genode::addr_t kcap,
                                         Genode::uint16_t local_name,
                                         bool bootstrapped,
 				Genode::uint16_t _sigh_badge,
         			unsigned _timeout,
         			bool _periodic)
 	:
-		Stored_session_info(creation_args,upgrade_args,kcap,local_name,bootstrapped),
+		Stored_session_info(creation_args,upgrade_args,local_name,bootstrapped),
 		sigh_badge (_sigh_badge),
                 timeout    (_timeout),
                 periodic   (_periodic)

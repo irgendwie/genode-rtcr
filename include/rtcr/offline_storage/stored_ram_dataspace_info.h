@@ -28,18 +28,16 @@ struct Rtcr::Stored_ram_dataspace_info : Stored_normal_info, Genode::List<Stored
 	bool                             const managed;
 	Genode::size_t                   const timestamp;
 
-	Stored_ram_dataspace_info(Ram_dataspace_info &info, Genode::addr_t targets_kcap, Genode::Ram_dataspace_capability copy_ds_cap)
+	Stored_ram_dataspace_info(Ram_dataspace_info &info, Genode::Ram_dataspace_capability copy_ds_cap)
 	:
-		Stored_normal_info(targets_kcap,
-				info.cap.local_name(),
+		Stored_normal_info(info.cap.local_name(),
 				info.bootstrapped),
 		memory_content(copy_ds_cap),
 		size(info.size), cached(info.cached), managed(info.mrm_info),
 		timestamp(info.timestamp())
 	{ }
 
-	Stored_ram_dataspace_info(Genode::addr_t kcap,
-                                        Genode::uint16_t local_name,
+	Stored_ram_dataspace_info(Genode::uint16_t local_name,
                                         bool bootstrapped,
 					Genode::Ram_dataspace_capability _memory_content,
         				Genode::size_t _size,
@@ -47,7 +45,7 @@ struct Rtcr::Stored_ram_dataspace_info : Stored_normal_info, Genode::List<Stored
         				bool _managed,
         				Genode::size_t _timestamp)
 	:
-		Stored_normal_info(kcap,local_name,bootstrapped),
+		Stored_normal_info(local_name,bootstrapped),
 		memory_content(_memory_content),
                 size(_size), cached(_cached), managed(_managed),
                 timestamp(_timestamp)

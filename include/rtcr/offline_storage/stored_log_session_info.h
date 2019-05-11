@@ -22,22 +22,20 @@ namespace Rtcr {
 struct Rtcr::Stored_log_session_info : Stored_session_info, Genode::List<Stored_log_session_info>::Element
 {
 
-	Stored_log_session_info(Log_session_component &log_session, Genode::addr_t targets_kcap)
+	Stored_log_session_info(Log_session_component &log_session)
 	:
 		Stored_session_info(log_session.parent_state().creation_args.string(),
 				log_session.parent_state().upgrade_args.string(),
-				targets_kcap,
 				log_session.cap().local_name(),
 				log_session.parent_state().bootstrapped)
 	{ }
 
 	Stored_log_session_info(const char* creation_args,
                                         const char* upgrade_args,
-                                        Genode::addr_t kcap,
                                         Genode::uint16_t local_name,
                                         bool bootstrapped)
         :
-                Stored_session_info(creation_args,upgrade_args,kcap,local_name,bootstrapped)
+                Stored_session_info(creation_args,upgrade_args,local_name,bootstrapped)
 	{ }
 
 	Stored_log_session_info *find_by_badge(Genode::uint16_t badge)

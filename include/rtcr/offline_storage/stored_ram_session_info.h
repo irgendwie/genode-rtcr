@@ -24,11 +24,10 @@ struct Rtcr::Stored_ram_session_info : Stored_session_info, Genode::List<Stored_
 {
 	Genode::List<Stored_ram_dataspace_info> stored_ramds_infos;
 
-	Stored_ram_session_info(Ram_session_component &ram_session, Genode::addr_t targets_kcap)
+	Stored_ram_session_info(Ram_session_component &ram_session)
 	:
 		Stored_session_info(ram_session.parent_state().creation_args.string(),
 				ram_session.parent_state().upgrade_args.string(),
-				targets_kcap,
 				ram_session.cap().local_name(),
 				ram_session.parent_state().bootstrapped),
 		stored_ramds_infos()
@@ -36,11 +35,10 @@ struct Rtcr::Stored_ram_session_info : Stored_session_info, Genode::List<Stored_
 
 	Stored_ram_session_info(const char* creation_args,
                                         const char* upgrade_args,
-                                        Genode::addr_t kcap,
                                         Genode::uint16_t local_name,
                                         bool bootstrapped)
 	:
-		Stored_session_info(creation_args,upgrade_args,kcap,local_name,bootstrapped),
+		Stored_session_info(creation_args,upgrade_args,local_name,bootstrapped),
 		stored_ramds_infos()
 	{ }
 

@@ -25,11 +25,10 @@ struct Rtcr::Stored_cpu_session_info : Stored_session_info, Genode::List<Stored_
 	Genode::uint16_t sigh_badge;
 	Genode::List<Stored_cpu_thread_info> stored_cpu_thread_infos;
 
-	Stored_cpu_session_info(Cpu_session_component &cpu_session, Genode::addr_t targets_kcap)
+	Stored_cpu_session_info(Cpu_session_component &cpu_session)
 	:
 		Stored_session_info(cpu_session.parent_state().creation_args.string(),
 				cpu_session.parent_state().upgrade_args.string(),
-				targets_kcap,
 				cpu_session.cap().local_name(),
 				cpu_session.parent_state().bootstrapped),
 		sigh_badge(cpu_session.parent_state().sigh.local_name()),
@@ -38,12 +37,11 @@ struct Rtcr::Stored_cpu_session_info : Stored_session_info, Genode::List<Stored_
 
 	Stored_cpu_session_info(const char* creation_args,
 					const char* upgrade_args,
-					Genode::addr_t kcap,
                                         Genode::uint16_t local_name,
                                         bool bootstrapped,
 					Genode::uint16_t sigh_badge)
 	:
-		Stored_session_info(creation_args,upgrade_args,kcap,local_name,bootstrapped),
+		Stored_session_info(creation_args,upgrade_args,local_name,bootstrapped),
 		sigh_badge(sigh_badge),
 		stored_cpu_thread_infos()
 	{ }

@@ -23,21 +23,19 @@ struct Rtcr::Stored_signal_context_info : Stored_normal_info, Genode::List<Store
 	Genode::uint16_t const signal_source_badge;
 	unsigned long    const imprint;
 
-	Stored_signal_context_info(Signal_context_info &info, Genode::addr_t targets_kcap)
+	Stored_signal_context_info(Signal_context_info &info)
 	:
-		Stored_normal_info(targets_kcap,
-				info.cap.local_name(),
+		Stored_normal_info(info.cap.local_name(),
 				info.bootstrapped),
 		signal_source_badge(info.ss_cap.local_name()),
 		imprint(info.imprint)
 	{ }
 
-	Stored_signal_context_info(Genode::addr_t kcap,
-                                        Genode::uint16_t local_name,
+	Stored_signal_context_info(Genode::uint16_t local_name,
                                         bool bootstrapped,
 					Genode::uint16_t _signal_source_badge, unsigned long _imprint)
 	:
-		Stored_normal_info(kcap,local_name,bootstrapped),
+		Stored_normal_info(local_name,bootstrapped),
 		signal_source_badge(_signal_source_badge),
                 imprint(_imprint)
 	{ }

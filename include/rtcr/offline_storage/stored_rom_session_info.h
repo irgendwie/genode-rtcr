@@ -24,12 +24,11 @@ struct Rtcr::Stored_rom_session_info : Stored_session_info, Genode::List<Stored_
 	Genode::uint16_t dataspace_badge;
 	Genode::uint16_t sigh_badge;
 
-	Stored_rom_session_info(Rom_session_component &rom_session, Genode::addr_t targets_kcap
+	Stored_rom_session_info(Rom_session_component &rom_session
 				/*,Genode::Ram_dataspace_capability copy_ds_cap*/)
 	:
 		Stored_session_info(rom_session.parent_state().creation_args.string(),
 				rom_session.parent_state().upgrade_args.string(),
-				targets_kcap,
 				rom_session.cap().local_name(),
 				rom_session.parent_state().bootstrapped),
 		dataspace_badge (rom_session.parent_state().dataspace.local_name()),
@@ -38,13 +37,12 @@ struct Rtcr::Stored_rom_session_info : Stored_session_info, Genode::List<Stored_
 
 	Stored_rom_session_info(const char* creation_args,
                                         const char* upgrade_args,
-                                        Genode::addr_t kcap,
                                         Genode::uint16_t local_name,
                                         bool bootstrapped,
 				Genode::uint16_t _dataspace_badge,
         			Genode::uint16_t _sigh_badge)
 	:
-		Stored_session_info(creation_args,upgrade_args,kcap,local_name,bootstrapped),
+		Stored_session_info(creation_args,upgrade_args,local_name,bootstrapped),
 		dataspace_badge(_dataspace_badge),
 		sigh_badge(_sigh_badge)
 	{ }

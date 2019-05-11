@@ -32,10 +32,9 @@ struct Rtcr::Stored_cpu_thread_info : Stored_normal_info, Genode::List<Stored_cp
 	Genode::uint16_t           sigh_badge;
 	Genode::Thread_state       ts;
 
-	Stored_cpu_thread_info(Cpu_thread_component &cpu_thread, Genode::addr_t targets_kcap)
+	Stored_cpu_thread_info(Cpu_thread_component &cpu_thread)
 	:
-		Stored_normal_info(targets_kcap,
-				cpu_thread.cap().local_name(),
+		Stored_normal_info(cpu_thread.cap().local_name(),
 				cpu_thread.parent_state().bootstrapped),
 		pd_session_badge(cpu_thread.parent_state().pd_session_cap.local_name()),
 		name        	(cpu_thread.parent_state().name),
@@ -49,13 +48,12 @@ struct Rtcr::Stored_cpu_thread_info : Stored_normal_info, Genode::List<Stored_cp
 		ts          	()
 	{ }
 
-	Stored_cpu_thread_info(Genode::addr_t kcap,
-                                        Genode::uint16_t local_name,
+	Stored_cpu_thread_info(Genode::uint16_t local_name,
                                         bool bootstrapped,Genode::uint16_t _pd_session_badge, Genode::Cpu_session::Name _name, 
 		Genode::Cpu_session::Weight _weight, Genode::addr_t _utcb, bool _started, bool _paused, 
 		bool _single_step, Genode::Affinity::Location _affinity, Genode::uint16_t _sigh_badge)
 	:
-		Stored_normal_info(kcap,local_name,bootstrapped),
+		Stored_normal_info(local_name,bootstrapped),
 		pd_session_badge(_pd_session_badge),
 		name        	(_name),
 		weight      	(_weight),
