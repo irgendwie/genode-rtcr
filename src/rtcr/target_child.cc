@@ -331,6 +331,7 @@ void Target_child::start(Restorer &restorer)
 			*_custom_services.pd_service,
 			*_custom_services.ram_service,
 			*_custom_services.cpu_service*/);
+	this->pause();
 
 	//enter_kdebug("before restore");
 
