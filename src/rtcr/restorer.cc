@@ -1078,24 +1078,6 @@ void Restorer::_start_threads(Cpu_root &cpu_root, Genode::List<Stored_cpu_sessio
 
 	// Iterate through all stored CPU sessions
 	Stored_cpu_session_info *stored_cpu_session = stored_cpu_sessions.first();
-	while(stored_cpu_session) {
-		Cpu_session_component *cpu_session = _find_child_object(stored_cpu_session->badge, cpu_root.session_infos());
-		Genode::log("--- session: ", cpu_session->cap());
-		Stored_cpu_thread_info *stored_cpu_thread = stored_cpu_session->stored_cpu_thread_infos.first();
-		while(stored_cpu_thread) {
-			Cpu_thread_component *cpu_thread = _find_child_object(stored_cpu_thread->badge, cpu_session->parent_state().cpu_threads);
-			Genode::log("------ thread: ", cpu_thread->cap());
-			Genode::Thread_state ts = cpu_thread->state();
-			print_thread_state(ts, true);
-			stored_cpu_thread = stored_cpu_thread->next();
-		}
-
-		stored_cpu_session = stored_cpu_session->next();
-	}
-	Genode::log("done");
-
-	// Iterate through all stored CPU sessions
-	stored_cpu_session = stored_cpu_sessions.first();
 	while(stored_cpu_session)
 	{
 		// Find corresponding recreated CPU session
