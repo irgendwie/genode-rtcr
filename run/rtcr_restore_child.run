@@ -31,17 +31,8 @@ install_config {
 		<resource name="RAM" quantum="1M"/>
 		<provides><service name="Timer"/></provides>
 	</start>
-	<start name="target_restorer-tester" caps="8000">
-		<resource name="RAM" quantum="200M"/>
-		<provides><service name="PD"/>
-		<service name="CPU"/>
-		<service name="RAM"/>
-		<service name="ROM"/>
-		<service name="RM"/>
-		<service name="LOG"/>
-		<service name="IO_MEM"/>
-		<service name="IO_PORT"/>
-		<service name="IRQ"/></provides>
+	<start name="target_restorer-tester" caps="300">
+		<resource name="RAM" quantum="100M"/>
 	</start>
 </config>}
 
@@ -53,5 +44,4 @@ build_boot_image { core ld.lib.so init timer target_restorer-tester sheep_counte
 
 append qemu_args " -nographic "
 
-#run_genode_until "3 sheeps.*\n" 10
 run_genode_until forever
