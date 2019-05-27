@@ -2,7 +2,7 @@
 # Build
 #
 
-build { core init drivers/timer test/rtcr_restore_child test/sheep_counter}
+build { core init drivers/timer test/rtcr_restore_child test/sheep_counter_async}
 
 create_boot_directory
 
